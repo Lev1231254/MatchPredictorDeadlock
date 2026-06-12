@@ -28,7 +28,7 @@ def test_model_accuracy(data_test_filename : str, model_filename : str):
 
     dataset_test = pd.read_csv(data_path)
     model = load(model_path)
-    
+
     data_test = dataset_test.drop(columns=["winning_team", "match_id"])
     target_test = dataset_test["winning_team"]
 
@@ -37,3 +37,25 @@ def test_model_accuracy(data_test_filename : str, model_filename : str):
     accuracy = (predictions==target_test).mean()
 
     return accuracy
+
+
+def extract_match_timestamp(filename : str) -> str:
+    # matchesXX.csv -> XX
+    return int(filename.split("matches")[1].split("test.csv")[0])
+
+
+def extract_model_timestamp(filename : str) -> str:
+    # matchesXX.csv -> XX
+    return int(filename.split("GBC")[1].split(".joblib")[0])
+
+
+def get_sorted_files(model : str, model_type : str):
+    data_test_files = sorted(
+        [f.name for f in Path("../data/").glob("matches*test.csv")],
+        key = lambda f : extract_match_timestamp(f)
+    )
+    model_files = sorted(
+        [f.name for f in Path("../models_" + model_type + "/").glob(model + "*.joblib")],
+        key = lambda f : extract_model_timestamp(f)
+    )
+    return data_test_files, model_files
