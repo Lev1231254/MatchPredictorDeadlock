@@ -34,7 +34,7 @@ if safety_check == "Y":
         target = dataset["winning_team"]
 
         model = classifier.fit(data, target)
-        dump(model, "models_no_tuning/GBC" + str(time_stamp) + ".joblib")
+        dump(model, "models_raw/GBC" + str(time_stamp) + ".joblib")
 
     print("Models are trained and saved.")
 
