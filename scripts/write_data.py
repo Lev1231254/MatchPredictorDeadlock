@@ -1,3 +1,9 @@
+from pathlib import Path
+import sys
+
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
+
 import pandas as pd
 import numpy as np
 import pipeline.fetch_data as fetch_data
@@ -26,8 +32,12 @@ if safety_check == "Y":
 
                 data_preproc_test = data_preprocessed.sample(frac=0.2)
                 data_preproc_train = data_preprocessed.drop(data_preproc_test.index)
-                data_preproc_test.to_csv("data/matches" + str(time_stamp) + "test.csv", index=False)
-                data_preproc_train.to_csv("data/matches" + str(time_stamp) + "train.csv", index=False)
+
+                train_file = Path("data") / ("matches" + str(time_stamp) + "train.csv")
+                test_file = Path("data") / ("matches" + str(time_stamp) + "test.csv")
+
+                data_preproc_test.to_csv(test_file, index=False)
+                data_preproc_train.to_csv(train_file, index=False)
 
         print("Datasets are saved")
 else:

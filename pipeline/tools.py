@@ -41,8 +41,11 @@ def test_model_accuracy(data_test_filename : str, model_filename : str):
 
 def extract_match_timestamp(filename : str) -> str:
     # matchesXX.csv -> XX
-    return int(filename.split("matches")[1].split("test.csv")[0])
-
+    if "test" in filename:
+        return int(filename.split("matches")[1].split("test.csv")[0])
+    elif "train" in filename:
+        return int(filename.split("matches")[1].split("train.csv")[0])
+    return None
 
 def extract_model_timestamp(filename : str) -> str:
     # matchesXX.csv -> XX
