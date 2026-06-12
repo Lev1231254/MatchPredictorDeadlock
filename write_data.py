@@ -6,7 +6,7 @@ import pipeline.preprocess as preprocess
 
 safety_check = input("Saving datasets will take some time. Do you want to do it? (Y/n)\n")
 if safety_check == "Y":
-        print("Saving datasets into data/")
+        print("Saving datasets...")
         # save heroes table
         heroes = fetch_data.get_heroes_dataframe()
         heroes.to_csv("data/heroes.csv")

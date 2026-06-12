@@ -5,19 +5,38 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import make_column_transformer
 from sklearn.pipeline import make_pipeline
 from sklearn.ensemble import GradientBoostingClassifier
+from joblib import dump
 
-# don't retrain models, if you don't know what you are doing
 
-safety_check = input("Retraining new models will take some time. Do you want to do it? (Y/n)\n")
+columns_preprocessor = make_column_transformer(
+        (OneHotEncoder(handle_unknown="ignore"), ["mid_boss.team_claimed"]),
+        remainder="passthrough"
+    )
+
+classifier = make_pipeline(
+        columns_preprocessor,
+        GradientBoostingClassifier()
+    )
+
+
+safety_check = input("Do you want to reatrain models? (Y/n)\n")
 
 if safety_check == "Y":
+    print("Training models...")
 
-    dataset_files = time_stamps = [f.name for f in Path("data/").glob("matches*.csv")]
+    dataset_files = [f.name for f in Path("data/").glob("matches*train.csv")]
     
     for dataset_file in dataset_files:
-        dataset = pd.read_csv(dataset_file)
-        data_train, data_test, target_train, target_test = train_test_split(dataset, test_size=0.2)
-        
+        time_stamp = dataset_file[7:-9] # filename : matches*train.csv
+
+        dataset = pd.read_csv("data/" + dataset_file)
+        data = dataset.drop(columns=["winning_team"])
+        target = dataset["winning_team"]
+
+        model = classifier.fit(data, target)
+        dump(model, "models_no_tuning/GBC" + str(time_stamp) + ".joblib")
+
+    print("Models are trained and saved.")
 
 else:
     print("Process terminated")
