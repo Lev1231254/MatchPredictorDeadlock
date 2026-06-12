@@ -13,7 +13,7 @@ if safety_check == "Y":
 
 
         # save preprocessed matches
-        LIMIT = 1000
+        LIMIT = 10000
 
         features = '''match_id, match_outcome, winning_team, hero_id, team, 
                 match_mode, average_badge_team0, "stats.time_stamp_s", "stats.net_worth", 

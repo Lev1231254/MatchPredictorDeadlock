@@ -19,7 +19,7 @@ classifier = make_pipeline(
     )
 
 
-safety_check = input("Do you want to reatrain models? (Y/n)\n")
+safety_check = input("Do you want to retrain models? (Y/n)\n")
 
 if safety_check == "Y":
     print("Training models...")
@@ -30,7 +30,7 @@ if safety_check == "Y":
         time_stamp = dataset_file[7:-9] # filename : matches*train.csv
 
         dataset = pd.read_csv("data/" + dataset_file)
-        data = dataset.drop(columns=["winning_team"])
+        data = dataset.drop(columns=["winning_team", "match_id"])
         target = dataset["winning_team"]
 
         model = classifier.fit(data, target)
