@@ -1,9 +1,10 @@
 import pandas as pd
+import numpy as np
 import pipeline.fetch_data as fetch_data
 import pipeline.preprocess as preprocess
 
 
-safety_check = input("Saving datasets will take some time. Do you still want do it? (Y/n)\n")
+safety_check = input("Saving datasets will take some time. Do you want to do it? (Y/n)\n")
 if safety_check == "Y":
         print("Saving datasets into data/")
         # save heroes table
@@ -22,7 +23,12 @@ if safety_check == "Y":
         for time_stamp in time_stamps:
                 data = fetch_data.get_match_dataframe(features, LIMIT)
                 data_preprocessed = preprocess.data_feature_preprocess(data, heroes, time_stamp)
-                data_preprocessed.to_csv("data/matches" + str(time_stamp) + ".csv", index=False)
+
+                data_preproc_test = data_preprocessed.sample(frac=0.2)
+                data_preproc_train = data_preprocessed.drop(data_preproc_test.index)
+                data_preproc_test.to_csv("data/matches" + str(time_stamp) + "test.csv", index=False)
+                data_preproc_train.to_csv("data/matches" + str(time_stamp) + "train.csv", index=False)
+
         print("Datasets are saved")
 else:
-        print("The programm is closed")
+    print("Process terminated")
