@@ -1,0 +1,18 @@
+Type	    Meaning
+feat	    new feature
+fix	        bug fix
+refactor	code restructuring (no behavior change)
+docs	    documentation only
+test	    adding or updating tests
+chore	    maintenance (deps, configs)
+
+✍️ Examples
+✔ Good commit messages
+
+feat: add model accuracy evaluation function
+
+fix: correct file path issue in model loading
+
+refactor: simplify test_model_accuracy function
+
+docs: update README with setup instructions
