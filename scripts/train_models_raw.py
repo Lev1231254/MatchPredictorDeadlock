@@ -24,7 +24,7 @@ classifier = make_pipeline(
     )
 
 
-safety_check = input("Do you want to retrain models? (Y/n)\n")
+safety_check = input("\nDo you want to retrain models? (Y/n)\n")
 
 if safety_check == "Y":
     print("Training models...")
@@ -42,7 +42,7 @@ if safety_check == "Y":
         model = classifier.fit(data, target)
         dump(model, "models_raw/GBC" + str(time_stamp) + ".joblib")
 
-    print("Models are trained and saved.")
+    print("Models are trained and saved.\n")
 
 else:
     print("Process terminated")
