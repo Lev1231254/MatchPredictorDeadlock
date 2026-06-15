@@ -12,7 +12,7 @@ import pipeline.preprocess as preprocess
 
 def split_data(data : pd.DataFrame):
         data_test = data.sample(frac=0.2)
-        data_train = data.drop(data.index)
+        data_train = data.drop(data_test.index)
         return data_test, data_train
 
 
@@ -25,7 +25,7 @@ if safety_check == "Y":
 
 
         # save preprocessed matches
-        LIMIT = 50000
+        LIMIT = 5000000
 
         features = '''match_id, start_time, match_outcome, winning_team, hero_id, team, 
                 match_mode, average_badge_team0, "stats.time_stamp_s", "stats.net_worth", 
