@@ -29,7 +29,7 @@ def test_model_accuracy(data_test_filename : str, model_filename : str):
     dataset_test = pd.read_csv(data_path)
     model = load(model_path)
 
-    data_test = dataset_test.drop(columns=["winning_team", "match_id"])
+    data_test = dataset_test.drop(columns=["winning_team", "start_time"])
     target_test = dataset_test["winning_team"]
 
 
