@@ -25,7 +25,9 @@ if safety_check == "Y":
 
 
         # save preprocessed matches
-        LIMIT = 5000000
+        LIMIT = 20000
+        time_start = "'2026-05-01 00:00:00'"
+        time_end = "'2026-05-24 23:59:59'"
 
         features = '''match_id, start_time, match_outcome, winning_team, hero_id, team, 
                 match_mode, average_badge_team0, "stats.time_stamp_s", "stats.net_worth", 
@@ -33,7 +35,7 @@ if safety_check == "Y":
         time_stamps = [500, 1000, 1500]
 
         for time_stamp in time_stamps:
-                data = fetch_data.get_match_dataframe(features, LIMIT)
+                data = fetch_data.get_match_dataframe(features, LIMIT, time_start, time_end)
                 data_preprocessed = preprocess.data_feature_preprocess(data, heroes, time_stamp)
 
                 data_preproc_test, data_preproc_train = split_data(data_preprocessed)

@@ -36,7 +36,7 @@ if safety_check == "Y":
 
         dataset = pd.read_csv(dataset_file)
 
-        data = dataset.drop(columns=["winning_team", "match_id"])
+        data = dataset.drop(columns=["winning_team", "start_time"])
         target = dataset["winning_team"]
 
         model = classifier.fit(data, target)

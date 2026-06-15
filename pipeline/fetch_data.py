@@ -1,7 +1,7 @@
 import duckdb
 
 
-def get_match_dataframe(features : str, limit : int):
+def get_match_dataframe(features : str, limit : int, time_start : str, time_end : str):
     DUCKLAKE_URL = "ducklake:https://s3-cache.deadlock-api.com/db-snapshot/public/db_snapshot.ducklake"
 
     with duckdb.connect() as con:
@@ -16,17 +16,16 @@ def get_match_dataframe(features : str, limit : int):
         """)
         con.execute(f"ATTACH '{DUCKLAKE_URL}' AS db (READ_ONLY)")
         con.execute("USE db.main")
-        
-        dataset = con.sql( 'SELECT ' + features + " FROM read_parquet(['s3://db-snapshot/public/match_player/match_player_88.parquet']) " +
+        # read_parquet(['s3://db-snapshot/public/match_player/match_player_88.parquet']
+        dataset = con.sql( 'SELECT ' + features + " FROM match_player " +
                         '''
                         WHERE 
                             match_outcome = \'TeamWin\' 
                             AND start_time BETWEEN
-                                TIMESTAMPTZ '2026-06-14 00:00:00'
-                            AND TIMESTAMPTZ '2026-06-14 23:59:59'
-
-                        ''' + 
-                        'LIMIT ' + str(limit) + ';').df()
+                                TIMESTAMPTZ ''' + time_start + '''
+                            AND TIMESTAMPTZ ''' + time_end
+                         + 
+                        ' LIMIT ' + str(limit) + ';').df()
         return dataset
     
 
