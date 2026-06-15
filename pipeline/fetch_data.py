@@ -21,6 +21,8 @@ def get_match_dataframe(features : str, limit : int, time_start : str, time_end 
                         '''
                         WHERE 
                             match_outcome = \'TeamWin\' 
+                            AND average_badge_team0 >= 100
+                            AND average_badge_team1 >= 100
                             AND start_time BETWEEN
                                 TIMESTAMPTZ ''' + time_start + '''
                             AND TIMESTAMPTZ ''' + time_end
