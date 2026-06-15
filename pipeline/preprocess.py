@@ -13,6 +13,7 @@ def data_feature_preprocess(dataset : pd.DataFrame, heroes : pd.DataFrame, time_
     for i in range(len(dataset)):
         # normal params
         match_id = dataset.at[i, "match_id"]
+        start_time = dataset.at[i, "start_time"]
         winning_team = dataset.at[i, "winning_team"]
         hero_id = dataset.at[i, "hero_id"]
         team = dataset.at[i, "team"]
@@ -41,7 +42,7 @@ def data_feature_preprocess(dataset : pd.DataFrame, heroes : pd.DataFrame, time_
                 
             row = [0 for i in range(n_features)]
             curr_match_id = match_id
-            row[0] = curr_match_id
+            row[0] = start_time
             row[1] = winning_team
             row[2] = mid_boss_team_claimed
             
@@ -57,7 +58,7 @@ def data_feature_preprocess(dataset : pd.DataFrame, heroes : pd.DataFrame, time_
     new_data_np = np.append(new_data_np, [row], axis=0)
     new_data_np = np.delete(new_data_np, [0,1], axis=0)
 
-    columns = np.append(["match_id", "winning_team", "mid_boss.team_claimed"], hero_ids)
+    columns = np.append(["start_time", "winning_team", "mid_boss.team_claimed"], hero_ids)
 
     new_data = pd.DataFrame(new_data_np, columns=columns)
     return new_data

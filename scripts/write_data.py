@@ -12,7 +12,7 @@ import pipeline.preprocess as preprocess
 
 def split_data(data : pd.DataFrame):
         data_test = data.sample(frac=0.2)
-        data_train = data.drop(data_preproc_test.index)
+        data_train = data.drop(data.index)
         return data_test, data_train
 
 
@@ -27,7 +27,7 @@ if safety_check == "Y":
         # save preprocessed matches
         LIMIT = 50000
 
-        features = '''match_id, match_outcome, winning_team, hero_id, team, 
+        features = '''match_id, start_time, match_outcome, winning_team, hero_id, team, 
                 match_mode, average_badge_team0, "stats.time_stamp_s", "stats.net_worth", 
                 "mid_boss.destroyed_time_s", "mid_boss.team_claimed"'''
         time_stamps = [500, 1000, 1500]
@@ -39,8 +39,8 @@ if safety_check == "Y":
                 data_preproc_test, data_preproc_train = split_data(data_preprocessed)
 
                 # data/matchesXXtrain.csv
-                # data/matchesXXtest.csv
                 train_file = Path("data") / ("matches" + str(time_stamp) + "train.csv")
+                # data/matchesXXtest.csv
                 test_file = Path("data") / ("matches" + str(time_stamp) + "test.csv")
 
                 data_preproc_test.to_csv(test_file, index=False)
