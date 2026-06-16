@@ -1,6 +1,14 @@
+import sys
+from pathlib import Path
+
+project_root = Path().resolve().parent
+
+sys.path.append(str(project_root))
+
 from pathlib import Path
 import pandas as pd
-from joblib import load
+from joblib import load, dump
+from sklearn.model_selection import RandomizedSearchCV
 
 
 def find_biggest_lesser_num(arr, num):
@@ -21,10 +29,10 @@ def find_all_time_stamps():
     return time_stamps
 
 
-def test_model_accuracy(data_test_filename : str, model_filename : str):
+def test_model_accuracy(data_test_filename : str, model_filename : str, model_type):
 
     data_path = Path("../data") / data_test_filename
-    model_path = Path("../models_raw") / model_filename
+    model_path = Path("../models_" + model_type) / model_filename
 
     dataset_test = pd.read_csv(data_path)
     model = load(model_path)
@@ -62,3 +70,38 @@ def get_sorted_files(model : str, model_type : str):
         key = lambda f : extract_model_timestamp(f)
     )
     return data_test_files, model_files
+
+
+def get_sorted_accuracies(model : str, model_type : str):
+    accuracies = []
+
+    data_test_filenames, model_filenames = get_sorted_files(model, model_type)
+    time_stamps = [extract_match_timestamp(f) for f in data_test_filenames]
+
+    pairs = list(zip(data_test_filenames, model_filenames))
+
+    for data_test_filename, model_filename in pairs:
+
+        accuracy = test_model_accuracy(data_test_filename, model_filename, model_type)
+        accuracies.append(accuracy)
+
+    return pd.DataFrame({"Accuracy" : accuracies, "Time stamps in seconds" : time_stamps})
+
+
+
+def change_param_names(param_name):
+        if "__" in param_name:
+            return param_name.rsplit("__")[1]
+        return param_name
+
+
+def get_random_search_results(random_search : RandomizedSearchCV, param_distributions):
+    cv_results = pd.DataFrame(random_search.cv_results_).sort_values("mean_test_score", ascending=False)
+
+    columns = [f"param_{param}" for param in param_distributions.keys()]
+    columns += ["mean_test_score", "std_test_score", "rank_test_score"]
+
+    cv_results = cv_results[columns]
+
+    cv_results = cv_results.rename(change_param_names, axis=1)
+    return cv_results
