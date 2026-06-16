@@ -25,7 +25,7 @@ if safety_check == "Y":
 
 
         # save preprocessed matches
-        LIMIT = 20000
+        LIMIT = 64000
         time_start = "'2026-05-01 00:00:00'"
         time_end = "'2026-05-24 23:59:59'"
 
