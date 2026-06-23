@@ -2,10 +2,10 @@ import duckdb
 
 
 def get_match_dataframe(features : str, limit : int, time_start : str, time_end : str):
-    DUCKLAKE_URL = "ducklake:https://s3-cache.deadlock-api.com/db-snapshot/public/db_snapshot.ducklake"
+    
+    DUCKLAKE_URL = "ducklake:https://s3-cache.deadlock-api.com/fast/db_snapshot.ducklake"
 
     with duckdb.connect() as con:
-
         con.execute("""
             INSTALL ducklake; LOAD ducklake;
             INSTALL httpfs; LOAD httpfs;
@@ -32,7 +32,7 @@ def get_match_dataframe(features : str, limit : int, time_start : str, time_end 
     
 
 def get_heroes_dataframe():
-    DUCKLAKE_URL = "ducklake:https://s3-cache.deadlock-api.com/db-snapshot/public/db_snapshot.ducklake"
+    DUCKLAKE_URL = "ducklake:https://s3-cache.deadlock-api.com/fast/db_snapshot.ducklake"
 
 
     with duckdb.connect() as con:

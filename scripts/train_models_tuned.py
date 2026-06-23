@@ -14,6 +14,7 @@ from joblib import dump
 import pipeline.tools as tools
 from scipy.stats import loguniform, randint
 from sklearn.model_selection import RandomizedSearchCV
+import time
 
 columns_preprocessor = make_column_transformer(
         (OneHotEncoder(handle_unknown="ignore"), ["mid_boss.team_claimed"]),
@@ -29,11 +30,11 @@ classifier = make_pipeline(
 param_distributions = {
     "gradientboostingclassifier__learning_rate" : loguniform(1e-2, 1),
     "gradientboostingclassifier__n_estimators" : randint(64, 512),
-    "gradientboostingclassifier__min_samples_leaf" : randint(1, 100),
-    "gradientboostingclassifier__min_samples_split" : randint(2, 10)
+    "gradientboostingclassifier__min_samples_leaf" : randint(1, 256),
+    "gradientboostingclassifier__min_samples_split" : randint(2, 12)
 }
 
-NUM_ITERATIONS = 5
+NUM_ITERATIONS = 100
 NUM_FOLDS = 5
 
 safety_check = input("\nTraining tuned models takes a lot of time. Do you want to retrain tuned models? (Y/n)\n")
@@ -54,6 +55,8 @@ if safety_check == "Y":
         target = dataset["winning_team"]
 
         # train model
+        start = time.time()
+
         print(str(time_stamp) + " seconds: ", end="")
         model_random_search = RandomizedSearchCV(
             classifier,
@@ -63,7 +66,10 @@ if safety_check == "Y":
             verbose=1
         )
         model_random_search.fit(data, target)
-        
+
+        end = time.time()
+        print("elapsed time minutes " + str((end - start)//60))
+
         # save results and model
         cv_results = tools.get_random_search_results(model_random_search, param_distributions)
         cv_res_file = "models_tuned/cv_res" + str(time_stamp) + ".csv"
