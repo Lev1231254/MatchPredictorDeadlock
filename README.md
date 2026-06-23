@@ -93,7 +93,8 @@ Average training time: XX minutes.
 
 <img width="585" height="454" alt="image" src="https://github.com/user-attachments/assets/ab91dbb7-c788-4c60-98bc-6853369a569f" />
 
-## Navigation
+## Project structure
+--- add image---
 
 `jupyter_notebooks/` — notebooks used for dataset exploration and experimentation
 
