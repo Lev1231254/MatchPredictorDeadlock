@@ -83,7 +83,7 @@ def get_sorted_accuracies(model : str, model_type : str):
     for data_test_filename, model_filename in pairs:
 
         accuracy = test_model_accuracy(data_test_filename, model_filename, model_type)
-        accuracies.append(accuracy)
+        accuracies.append(accuracy) 
 
     return pd.DataFrame({"Accuracy" : accuracies, "Time stamps in seconds" : time_stamps})
 
@@ -105,3 +105,8 @@ def get_random_search_results(random_search : RandomizedSearchCV, param_distribu
 
     cv_results = cv_results.rename(change_param_names, axis=1)
     return cv_results
+
+
+def df_seconds_to_minutes(df : pd.DataFrame):
+    df["Time stamps in seconds"] = (df["Time stamps in seconds"].astype(int) // 60).astype(str)
+    return df.rename(columns={"Time stamps in seconds" : "Time stamps in minutes"})

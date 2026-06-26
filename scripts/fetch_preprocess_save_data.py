@@ -49,7 +49,8 @@ if safety_check == "Y":
                 match_mode, average_badge_team0, "stats.time_stamp_s", "stats.net_worth", 
                 "mid_boss.destroyed_time_s", "mid_boss.team_claimed"'''
         
-        time_stamps = [500, 1000, 1200, 1500]
+        # all desired time_stamps in seconds
+        time_stamps = [60 * x for x in range(3, 45)]
 
 
         for time_stamp in time_stamps:
