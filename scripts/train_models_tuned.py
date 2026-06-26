@@ -34,7 +34,7 @@ param_distributions = {
     "gradientboostingclassifier__min_samples_split" : randint(2, 12)
 }
 
-NUM_ITERATIONS = 100
+NUM_ITERATIONS = 200
 NUM_FOLDS = 5
 
 safety_check = input("\nTraining tuned models takes a lot of time. Do you want to retrain tuned models? (Y/n)\n")

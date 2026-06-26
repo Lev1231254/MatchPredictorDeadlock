@@ -1,3 +1,9 @@
+from pathlib import Path
+import sys
+
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
+
 import duckdb
 
 
@@ -17,18 +23,18 @@ def get_match_dataframe(features : str, limit : int, time_start : str, time_end 
         con.execute(f"ATTACH '{DUCKLAKE_URL}' AS db (READ_ONLY)")
         con.execute("USE db.main")
         # read_parquet(['s3://db-snapshot/public/match_player/match_player_88.parquet']
-        dataset = con.sql( 'SELECT ' + features + " FROM match_player " +
-                        '''
-                        WHERE 
-                            match_outcome = \'TeamWin\' 
-                            AND average_badge_team0 >= 100
-                            AND average_badge_team1 >= 100
-                            AND start_time BETWEEN
-                                TIMESTAMPTZ ''' + time_start + '''
-                            AND TIMESTAMPTZ ''' + time_end
-                         + 
-                        ' LIMIT ' + str(limit) + ';').df()
-        return dataset
+        dataset = con.sql(f"""
+            SELECT {features}
+            FROM read_parquet('data/*.parquet')
+            WHERE
+                match_outcome = 'TeamWin'
+                AND average_badge_team0 >= 100
+                AND average_badge_team1 >= 100
+                AND start_time BETWEEN
+                    TIMESTAMPTZ {time_start}
+                    AND TIMESTAMPTZ {time_end}
+            LIMIT {limit}
+        """).df()
     
 
 def get_heroes_dataframe():
@@ -50,3 +56,23 @@ def get_heroes_dataframe():
         heroes = con.sql("SELECT * FROM heroes").df()
         heroes.index = heroes["id"]
         return heroes
+    
+
+def get_match_dataframe_from_file(features: str, limit: int, time_start: str, time_end: str):
+
+    with duckdb.connect() as con:
+        dataset = con.sql(f"""
+            SELECT {features}
+            FROM read_parquet('data_raw/*.parquet')
+            WHERE
+                match_outcome = 'TeamWin'
+                AND average_badge_team0 >= 100
+                AND average_badge_team1 >= 100
+                AND start_time BETWEEN
+                    TIMESTAMPTZ {time_start}
+                    AND TIMESTAMPTZ {time_end}
+            LIMIT {limit}
+        """).df()
+        
+
+    return dataset
