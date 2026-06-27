@@ -110,3 +110,9 @@ def get_random_search_results(random_search : RandomizedSearchCV, param_distribu
 def df_seconds_to_minutes(df : pd.DataFrame):
     df["Time stamps in seconds"] = (df["Time stamps in seconds"].astype(int) // 60).astype(str)
     return df.rename(columns={"Time stamps in seconds" : "Time stamps in minutes"})
+
+
+def remove_multiple_elements(target_arr, elements_to_delete):
+    for element in elements_to_delete:
+        target_arr.remove(element)
+    return target_arr

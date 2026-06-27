@@ -47,7 +47,9 @@ if safety_check == "Y":
     for dataset_file in dataset_files:
 
         # load dataset
+        loaded_time_stamps = ['1000', '1020']
         time_stamp = tools.extract_match_timestamp(dataset_file)
+        time_stamp = tools.remove_multiple_elements(time_stamp, loaded_time_stamps)
 
         dataset = pd.read_csv(dataset_file)
 
