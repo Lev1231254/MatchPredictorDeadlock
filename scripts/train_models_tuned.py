@@ -42,14 +42,16 @@ safety_check = input("\nTraining tuned models takes a lot of time. Do you want t
 if safety_check == "Y":
     print("Training models...")
 
+    loaded_time_stamps = [1000, 1020]
     dataset_files = ["data/" + f.name for f in Path("data/").glob("matches*train.csv")]
     
     for dataset_file in dataset_files:
 
         # load dataset
-        loaded_time_stamps = ['1000', '1020']
         time_stamp = tools.extract_match_timestamp(dataset_file)
-        time_stamp = tools.remove_multiple_elements(time_stamp, loaded_time_stamps)
+        if (time_stamp in loaded_time_stamps):
+            continue
+        
 
         dataset = pd.read_csv(dataset_file)
 
