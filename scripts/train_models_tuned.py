@@ -42,7 +42,7 @@ safety_check = input("\nTraining tuned models takes a lot of time. Do you want t
 if safety_check == "Y":
     print("Training models...")
 
-    loaded_time_stamps = [1000, 1020]
+    loaded_time_stamps = [60 * x for x in range(3, 45) if x * 60 != 960]
     dataset_files = ["data/" + f.name for f in Path("data/").glob("matches*train.csv")]
     
     for dataset_file in dataset_files:

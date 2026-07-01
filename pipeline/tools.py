@@ -8,7 +8,7 @@ sys.path.append(str(project_root))
 from pathlib import Path
 import pandas as pd
 from joblib import load, dump
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV, cross_validate
 
 
 def find_biggest_lesser_num(arr, num):
