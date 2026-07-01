@@ -1,10 +1,107 @@
-Still in development.
+# Deadlock Match Predictor
 
-Tasks solved:
-  - Achieve 72% accuracy on minute 20 (with hyper parameter tuning)
-  - Create models for 4 time stamps
-    
-Tasks ahead:
-  - select matches in one patch and rank, to increase accuracy and robustness
-  - train and save models for each minute
-  - develop user friendly interface, to predict ongoing matches
+## Description
+
+An end-to-end machine learning pipeline that predicts match outcomes for the game *Deadlock*.
+This project covers the full data lifecycle: fetching raw match data via Deadlock API, preprocessing and engineering features, and training predictive models to forecast winners.
+
+<img width="1010" height="546" alt="image" src="https://github.com/user-attachments/assets/2e6254b8-936e-4c8f-a99d-a377998920ca" />
+
+
+## Installation
+
+### Prerequisites
+
+* Python 3.10 or newer
+
+### Windows
+
+Open Windows PowerShell and copy-paste the following:
+
+```bash
+git clone https://github.com/Lev1231254/MatchPredictorDeadlock
+cd MatchPredictorDeadlock
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+jupyter notebook jupyter_notebooks/test_models.ipynb
+```
+
+### Linux
+
+Open a terminal and copy-paste the following:
+
+```bash
+git clone https://github.com/Lev1231254/MatchPredictorDeadlock
+cd MatchPredictorDeadlock
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+jupyter notebook jupyter_notebooks/test_models.ipynb
+```
+
+After that, a notebook containing tests of different models should open.
+
+<img width="1487" height="872" alt="image" src="https://github.com/user-attachments/assets/2ba91774-3292-4ed8-b2fe-a79de0808bed" />
+
+
+## Details
+
+### Technologies used
+- Problem exploring: Jupyter Notebook
+- Data & Pipeline: SQL, Python, pandas
+- Modelling: scikit-learn, Gradient Boosting Classifier
+- Visualization: seaborn
+
+### Data Fetching
+
+I fetched data from the Deadlock API data dumps:
+
+https://deadlock-api.com/data-dumps
+
+
+### Data Preprocessing
+
+1. Initially, data from the Deadlock API is structured *per player*. This means that instead of one row per match, there is one row for each player who participated in the match.
+
+   Each match is divided into 12 rows, so I merge these 12 rows into a single match record:
+
+
+2. I include the following features:
+
+   * heroes
+   * net worth of each hero since the previous timestamp
+   * which team killed the Mid Boss since the previous timestamp
+
+3. Since the state of a match changes over time, it is better to train a separate model for each minute of the game.
+
+   To differentiate between game states, we use the `time_stamp_s` column. It records the state of the game at different timestamps.
+
+
+### Training Models
+
+Simple models such as Logistic Regression are not well suited for this task because they cannot capture the complex interactions between heroes.
+Instead, I use a **Gradient Boosting Classifier**.
+
+I tuned the hyperparameters using a random search algorithm.
+Average training time: 100 minutes
+
+<img width="1010" height="546" alt="image" src="https://github.com/user-attachments/assets/ad1e2581-41a0-418a-aa16-c8f99a73f7c4" />
+
+
+## Project structure
+
+`jupyter_notebooks/` — notebooks used for dataset exploration and experimentation
+
+`data/` — preprocessed data (empty in the GitHub repository to avoid storing large files)
+
+`data_raw/` - raw parquet files downloaded directly from DeadlockAPI
+
+`models_raw/` — untuned Gradient Boosting Classifier models
+
+`models_tuned/` — tuned Gradient Boosting Classifier models
+
+`pipeline/` — data fetching, preprocessing, and utility functions
+
+`scripts/` — scripts for fetching data, saving datasets, training models, and saving trained models
+
